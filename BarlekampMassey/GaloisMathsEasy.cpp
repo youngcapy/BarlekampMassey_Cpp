@@ -13,13 +13,23 @@ static class GaloisMathsEasy {
 		}
 		void numToField(int& num, unsigned& base) {
 
+			bool negFlag = num < 0;
 			num = abs(num) % base;
+			
+			if (negFlag)
+				num = base - num;
 			
 		}       
 
         unsigned reversedToField(unsigned& num, unsigned& base) {
 
-			std::pair<int, int> bezoutCoeffs{ extendedEuclid(num, base) };
+			if (num == 1 || num == 0)
+				return num;
+
+			std::pair<unsigned, unsigned> bezoutCoeffs{0, 0};
+
+			extendedEuclid(num, base, bezoutCoeffs);
+
 			int x_coeff{ static_cast<int>(bezoutCoeffs.first * num ) };
 			int y_coeff{ static_cast<int>(bezoutCoeffs.second * num) };
 			numToField(x_coeff, base);
@@ -36,7 +46,7 @@ static class GaloisMathsEasy {
 
 
         //HELP FUNCTIONS EUCLIDUS//
-        std::pair<unsigned, unsigned>extendedEuclid(unsigned a, unsigned b) {
+        void extendedEuclid(unsigned a, unsigned b, std::pair<unsigned, unsigned>& coeffsPair) {
 			int r1{}; int r2{};
 			int r = 0;
 			
@@ -70,11 +80,11 @@ static class GaloisMathsEasy {
 				x2 = x; y2 = y;
 				
 			}
-
+			//std::cout;
 			numToField(x, b);
 			numToField(y, b);
-
-			return std::pair<unsigned, unsigned> {x, y};
+			coeffsPair.first = x;
+			coeffsPair.second = y;
 
         }
 
