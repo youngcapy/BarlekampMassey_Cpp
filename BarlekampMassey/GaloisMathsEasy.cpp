@@ -6,9 +6,26 @@ static class GaloisMathsEasy {
 
 	public:
 
-		void polyToDegree(std::vector<unsigned>& poly, int& degree){
+		void multiplyPolyOnConst(std::vector<unsigned>& poly, unsigned& base ,unsigned& constNum) {
+
+			for (unsigned i{}; i < poly.size(); i++) {
+				poly[i] *= constNum;
+				int temp = (unsigned)poly[i];
+				numToField(temp, base);
+				poly[i] = static_cast<unsigned>(temp);
+			}
+		}
+
+		void multiplyPolyOnPoly(std::vector<unsigned>& polyToMultiply, std::vector<unsigned>& multiplierPoly, unsigned& base) {
+
+
+
+		}
+
+		void polyToDegree(std::vector<unsigned>& poly, unsigned& degree){ // Meaned to poly be like 2x^3+ 1x^2 + x + 1 == {2, 1, 1, 1};
 		
-			
+			for (unsigned i{}; i < degree; i++)
+				poly.push_back(0);
 
 		}
 		void numToField(int& num, unsigned& base) {
