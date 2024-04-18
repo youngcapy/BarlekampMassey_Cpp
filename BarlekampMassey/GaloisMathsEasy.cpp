@@ -6,7 +6,15 @@ static class GaloisMathsEasy {
 
 	public:
 
-		void multiplyPolyOnConst(std::vector<unsigned>& poly, unsigned& base ,unsigned& constNum) {
+
+		void extendPoly(std::vector<unsigned>& poly, unsigned numToExtend) { // Extending poly adding zeros to the begin
+
+			for(unsigned i{}; i < numToExtend; i++)
+				poly.insert(poly.begin(), 0);
+
+		}
+
+		void multiplyPolyOnConst(std::vector<unsigned>& poly, unsigned& base ,unsigned& constNum) { // Multiplying elements to constant num 
 
 			for (unsigned i{}; i < poly.size(); i++) {
 				poly[i] *= constNum;
@@ -16,19 +24,48 @@ static class GaloisMathsEasy {
 			}
 		}
 
-		void multiplyPolyOnPoly(std::vector<unsigned>& polyToMultiply, std::vector<unsigned>& multiplierPoly, unsigned& base) {
+		void multiplyPolyOnPoly(std::vector<unsigned>& polyToMultiply, std::vector<unsigned>& multiplierPoly, unsigned& base) { // Meaned polies to be equialent at length.
 
+			unsigned firstSizeOfPoly = polyToMultiply.size();
+			bool extended = false;
+			unsigned sizeOfVectorMuled{0};
+			for (unsigned i{}; i < polyToMultiply.size(); i++) {
+				if (polyToMultiply[i] == 0) // If element is zero, skip
+					continue;
+				for (unsigned j{}; j < multiplierPoly.size(); j++) {
 
+					if (multiplierPoly[j] == 0) // If element is zero, skip
+						continue;
+					if ((2 * firstSizeOfPoly - 1 - i - j) > polyToMultiply.size() && !extended) { // The vector can be extended just once
+						sizeOfVectorMuled = 2 * firstSizeOfPoly - 1 - i - j;
+						i += sizeOfVectorMuled - polyToMultiply.size();
+						extendPoly(polyToMultiply, i);
+						extended = true;
+						
+					}
+					unsigned indexToInsert = polyToMultiply.size() - (polyToMultiply.size() - 1 - i + multiplierPoly.size() - j);
+					if(indexToInsert != i)
+						polyToMultiply[indexToInsert] += (polyToMultiply[i] * multiplierPoly[j]); // Multiplying elements
+					else
+						polyToMultiply[indexToInsert] = polyToMultiply[i] * multiplierPoly[j];
+				}
+			}
 
+			for (unsigned i{}; i < polyToMultiply.size(); i++) {
+				int temp = static_cast<int>(polyToMultiply[i]);
+				numToField(temp, base); // Bringing elements to field
+				polyToMultiply[i] = static_cast<unsigned>(temp);
+			
+			}
 		}
 
-		void polyToDegree(std::vector<unsigned>& poly, unsigned& degree){ // Meaned to poly be like 2x^3+ 1x^2 + x + 1 == {2, 1, 1, 1};
+		void polyToDegree(std::vector<unsigned>& poly, unsigned degree){ // Meaned poly to be like 2x^3+ 1x^2 + x + 1 == {2, 1, 1, 1};
 		
 			for (unsigned i{}; i < degree; i++)
 				poly.push_back(0);
 
 		}
-		void numToField(int& num, unsigned& base) {
+		void numToField(int& num, unsigned& base) { // Function to bring elements to field
 
 			bool negFlag = num < 0;
 			num = abs(num) % base;
@@ -38,7 +75,7 @@ static class GaloisMathsEasy {
 			
 		}       
 
-        unsigned reversedToField(unsigned& num, unsigned& base) {
+        unsigned reversedToField(unsigned& num, unsigned& base) { // Finding reversed to the field with Euclidus extended algorithm
 
 			if (num == 1 || num == 0)
 				return num;
