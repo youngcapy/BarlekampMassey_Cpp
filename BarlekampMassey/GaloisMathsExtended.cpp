@@ -1,10 +1,17 @@
 #include <iostream>;
 #include <vector>;
 #include <cmath>;
+#pragma once
 
-static class GaloisMathsHard {
+class GaloisMathsExtended {
 
 public:
+
+	GaloisMathsExtended()
+	{
+
+	}
+
 	void polyToDegree(std::vector<unsigned>& poly, int degree) {
 
 

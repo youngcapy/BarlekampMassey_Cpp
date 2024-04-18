@@ -1,16 +1,30 @@
 #include <iostream>;
 #include <vector>;
 #include <cmath>;
+#pragma once
 
-static class GaloisMathsEasy {
+class GaloisMathsEasy {
 
 	public:
 
+		GaloisMathsEasy()
+		{
+
+		}
 
 		void extendPoly(std::vector<unsigned>& poly, unsigned numToExtend) { // Extending poly adding zeros to the begin
 
+			if (numToExtend <= 0)
+				return;
 			for(unsigned i{}; i < numToExtend; i++)
 				poly.insert(poly.begin(), 0);
+
+		}
+
+		void decreasePoly(std::vector<unsigned>& poly, unsigned numToDecrease) { // Decreasing poly deleting elements
+
+			for (unsigned i{}; i < numToDecrease; i++)
+				poly.pop_back();
 
 		}
 
