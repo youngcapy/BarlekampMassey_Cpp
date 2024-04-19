@@ -3,7 +3,9 @@
 #include "GaloisMathsEasy.cpp";
 #include "GaloisMathsExtended.cpp";
 #include <cmath>;
+#include <stack>;
 #pragma once;
+
 
 class BarlekampMasseyClass {
 
@@ -28,6 +30,7 @@ class BarlekampMasseyClass {
 			std::vector<unsigned> returnalPoly{ 1 };
 			std::vector<unsigned> previousState{ 1 };
 			std::vector<unsigned> tempForReturnal{ 1 };
+			std::stack<std::vector<unsigned>> tempForStates{};
 			unsigned length = 0; // ReturnalPoly size
 			unsigned b = 1;
 			unsigned x = 1;
@@ -60,6 +63,9 @@ class BarlekampMasseyClass {
 				else if (d != 0) {
 
 					// CALCULATING NEW RETURNAL 
+
+					tempForStates.push(std::vector<unsigned>{previousState.begin(), previousState.end()});
+
 					multiplierNegative = 0 - d;
 					EasyOperational.polyToDegree(previousState, x); // Bringing poly to field
 					EasyOperational.reversedToField(b, base);
@@ -74,6 +80,7 @@ class BarlekampMasseyClass {
 						std::copy(returnalPoly.begin(), returnalPoly.end(), tempForReturnal.begin()); // Copying to temp array
 
 					}
+					
 
 					EasyOperational.multiplyPolyOnConst(previousState, base, multiplierPositive); // Renewing a returnals
 					sizeDifference = previousState.size() - returnalPoly.size();
@@ -89,10 +96,16 @@ class BarlekampMasseyClass {
 						returnalPoly[j] = static_cast<unsigned>(tempForBring); // Rewriting returnalPolynom
 
 					}
+					previousState = tempForStates.top();
+					//tempForStates.pop();
 
 					if ((2 * length) <= n) {
 
-						EasyOperational.decreasePoly(previousState, previousState.size() - tempForReturnal.size());
+						sizeDifference = previousState.size() - tempForReturnal.size();
+						if (sizeDifference >= 0)
+							EasyOperational.decreasePoly(previousState, previousState.size() - tempForReturnal.size());
+						else
+							EasyOperational.extendPoly(previousState, abs(sizeDifference));
 						std::copy(tempForReturnal.begin(), tempForReturnal.end(), previousState.begin());
 						length = n + 1 - length;
 						d = b;
