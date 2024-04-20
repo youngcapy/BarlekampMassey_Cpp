@@ -79,7 +79,7 @@ class GaloisMathsEasy {
 				poly.push_back(0);
 
 		}
-		void numToField(int& num, unsigned& base) { // Function to bring elements to field
+		void numToField(int& num, unsigned& base) { // Function to bring elements to field by link
 
 			bool negFlag = num < 0;
 			num = abs(num) % base;
@@ -88,6 +88,7 @@ class GaloisMathsEasy {
 				num = base - num;
 			
 		}       
+
 
         unsigned reversedToField(unsigned& num, unsigned& base) { // Finding reversed to the field with Euclidus extended algorithm
 

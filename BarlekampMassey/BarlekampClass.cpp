@@ -68,8 +68,8 @@ class BarlekampMasseyClass {
 
 					multiplierNegative = 0 - d;
 					EasyOperational.polyToDegree(previousState, x); // Bringing poly to field
-					EasyOperational.reversedToField(b, base);
-					multiplierNegative *= b;
+					//EasyOperational.reversedToField(b, base);
+					multiplierNegative *= EasyOperational.reversedToField(b, base);
 					EasyOperational.numToField(multiplierNegative, base);
  					multiplierPositive = static_cast<unsigned>(multiplierNegative); 
 					//Calculating needed operations for all situations
@@ -87,7 +87,7 @@ class BarlekampMasseyClass {
 					if (sizeDifference > 0)
 						EasyOperational.extendPoly(returnalPoly, sizeDifference);
 					else
-						EasyOperational.extendPoly(previousState, sizeDifference);
+						EasyOperational.extendPoly(previousState, abs(sizeDifference));
 
 					for (unsigned j{}; j < previousState.size(); j++) {
 						
@@ -108,7 +108,7 @@ class BarlekampMasseyClass {
 							EasyOperational.extendPoly(previousState, abs(sizeDifference));
 						std::copy(tempForReturnal.begin(), tempForReturnal.end(), previousState.begin());
 						length = n + 1 - length;
-						d = b;
+						b = d;
 						x = 1;
 
 					}
@@ -122,8 +122,11 @@ class BarlekampMasseyClass {
 
 			}
 
+			//returnalPoly.pop_back(); // Deleting unused num
+			std::reverse(returnalPoly.begin(), returnalPoly.end()); // Reversing to display in LFSR (x^0 + x^1 + x^2....+ x^n)
 			for (auto n : returnalPoly)
 				std::cout << n << "\t";
+			std::cout << std::endl;
 			std::cout << length << std::endl;
 
 		}
