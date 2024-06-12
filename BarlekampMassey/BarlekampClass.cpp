@@ -68,8 +68,7 @@ class BarlekampMasseyClass {
 
 					multiplierNegative = 0 - d;
 					EasyOperational.polyToDegree(previousState, x); // Bringing poly to field
-					//EasyOperational.reversedToField(b, base);
-					multiplierNegative *= EasyOperational.reversedToField(b, base);
+					multiplierNegative *= EasyOperational.reversedToField(b, base); // Finding reversed and inserting it
 					EasyOperational.numToField(multiplierNegative, base);
  					multiplierPositive = static_cast<unsigned>(multiplierNegative); 
 					//Calculating needed operations for all situations

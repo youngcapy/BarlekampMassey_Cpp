@@ -21,7 +21,7 @@ class BarlekampMasseyInfo {
 int main()
 {
 
-	std::vector<int> mySeq{ 1, 3, 2, 0, 5 };
+	std::vector<int> mySeq{ 1, 3, 2, 0, 5, 3, 2, 6, 3, 4, 0, 6};
 	unsigned base = 7;
 	BarlekampMasseyClass massey(mySeq, base);
 	massey.easyFieldBM();
