@@ -1,31 +1,19 @@
-﻿#include <iostream>;
-#include <vector>;
-#include "GaloisMathsEasy.cpp";
-#include "GaloisMathsExtended.cpp";
-#include "BarlekampClass.cpp";
-#pragma once
+﻿#include "BarlekampClass.h"
+#include "GaloisMathsEasy.h"
+#include "GaloisMathsExtended.h"
+#include "BarlekampMasseyInfo.h"
 
-class BarlekampMasseyInfo {
+#include "sys/resource.h"
 
-    public:
-		BarlekampMasseyInfo()
-		{
-
-		}
-	private:
-		int degree;
-		std::vector<int> polynom{};
-};
-
-
-int main()
+int main(int argc, char* argv[])
 {
+	
+	GaloisMathsExtended sample{2, 3};
+	//struct rlimit rl;
+	//getrlimit(RLIMIT_STACK, &rl);
+    //std::cout << rl.rlim_cur << std::endl;
 
-	std::vector<int> mySeq{ 1, 3, 2, 0, 5, 3, 2, 6, 3, 4, 0, 6};
-	unsigned base = 7;
-	BarlekampMasseyClass massey(mySeq, base);
-	massey.easyFieldBM();
-
+	return 0;
 
 }
 

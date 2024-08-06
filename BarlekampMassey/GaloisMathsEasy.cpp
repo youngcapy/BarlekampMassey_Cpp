@@ -1,18 +1,12 @@
-#include <iostream>;
-#include <vector>;
-#include <cmath>;
-#pragma once
+#include "GaloisMathsEasy.h"
 
-class GaloisMathsEasy {
 
-	public:
-
-		GaloisMathsEasy()
+		GaloisMathsEasy::GaloisMathsEasy()
 		{
 
 		}
 
-		void extendPoly(std::vector<unsigned>& poly, unsigned numToExtend) { // Extending poly adding zeros to the begin
+		void GaloisMathsEasy::extendPoly(std::vector<unsigned>& poly, unsigned numToExtend) { // Extending poly adding zeros to the begin
 
 			if (numToExtend <= 0)
 				return;
@@ -21,14 +15,14 @@ class GaloisMathsEasy {
 
 		}
 
-		void decreasePoly(std::vector<unsigned>& poly, unsigned numToDecrease) { // Decreasing poly deleting elements
+		void GaloisMathsEasy::decreasePoly(std::vector<unsigned>& poly, unsigned numToDecrease) { // Decreasing poly deleting elements
 
 			for (unsigned i{}; i < numToDecrease; i++)
 				poly.pop_back();
 
 		}
 
-		void multiplyPolyOnConst(std::vector<unsigned>& poly, unsigned& base ,unsigned& constNum) { // Multiplying elements to constant num 
+		void GaloisMathsEasy::multiplyPolyOnConst(std::vector<unsigned>& poly, unsigned& base ,unsigned& constNum) { // Multiplying elements to constant num 
 
 			for (unsigned i{}; i < poly.size(); i++) {
 				poly[i] *= constNum;
@@ -38,7 +32,7 @@ class GaloisMathsEasy {
 			}
 		}
 
-		void multiplyPolyOnPoly(std::vector<unsigned>& polyToMultiply, std::vector<unsigned>& multiplierPoly, unsigned& base) { // Meaned polies to be equialent at length.
+		void GaloisMathsEasy::multiplyPolyOnPoly(std::vector<unsigned>& polyToMultiply, std::vector<unsigned>& multiplierPoly, unsigned& base) { // Meaned polies to be equialent at length.
 
 			unsigned firstSizeOfPoly = polyToMultiply.size();
 			bool extended = false;
@@ -73,13 +67,13 @@ class GaloisMathsEasy {
 			}
 		}
 
-		void polyToDegree(std::vector<unsigned>& poly, unsigned degree){ // Meaned poly to be like 2x^3+ 1x^2 + x + 1 == {2, 1, 1, 1};
+		void GaloisMathsEasy::polyToDegree(std::vector<unsigned>& poly, unsigned degree){ // Meaned poly to be like 2x^3+ 1x^2 + x + 1 == {2, 1, 1, 1};
 		
 			for (unsigned i{}; i < degree; i++)
 				poly.push_back(0);
 
 		}
-		void numToField(int& num, unsigned& base) { // Function to bring elements to field by link
+		void GaloisMathsEasy::numToField(int& num, unsigned& base) { // Function to bring elements to field by link
 
 			bool negFlag = num < 0;
 			num = abs(num) % base;
@@ -90,7 +84,7 @@ class GaloisMathsEasy {
 		}       
 
 
-        unsigned reversedToField(unsigned& num, unsigned& base) { // Finding reversed to the field with Euclidus extended algorithm
+        unsigned GaloisMathsEasy::reversedToField(unsigned& num, unsigned& base) { // Finding reversed to the field with Euclidus extended algorithm
 
 			if (num == 1 || num == 0)
 				return num;
@@ -115,7 +109,7 @@ class GaloisMathsEasy {
 
 
         //HELP FUNCTIONS EUCLIDUS//
-        void extendedEuclid(unsigned a, unsigned b, std::pair<unsigned, unsigned>& coeffsPair) {
+        void GaloisMathsEasy::extendedEuclid(unsigned a, unsigned b, std::pair<unsigned, unsigned>& coeffsPair) {
 			int r1{}; int r2{};
 			int r = 0;
 			
@@ -157,4 +151,3 @@ class GaloisMathsEasy {
 
         }
 
-};
