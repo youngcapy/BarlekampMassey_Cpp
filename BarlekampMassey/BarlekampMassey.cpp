@@ -8,7 +8,7 @@
 int main(int argc, char* argv[])
 {
 	
-	GaloisMathsExtended sample{2, 3};
+	GaloisMathsExtended sample{2, 5};
 	//struct rlimit rl;
 	//getrlimit(RLIMIT_STACK, &rl);
     //std::cout << rl.rlim_cur << std::endl;
