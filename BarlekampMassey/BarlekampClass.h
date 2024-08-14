@@ -2,7 +2,8 @@
 
 #include "GaloisMathsEasy.h"
 #include "GaloisMathsExtended.h"
-
+#include <fstream>
+#include <thread>
 
 
 
@@ -12,33 +13,22 @@ class BarlekampMasseyClass {
 	friend class GaloisMathsExtended;
 	public:
 
-		BarlekampMasseyClass(std::vector<int> cypheredSeq, unsigned base, unsigned degree = 1)
-		{
-
-			this->base = base;
-			this->degree = degree;
-
-			HardOperational = new GaloisMathsExtended{this->base, this->degree};
-			EasyOperational = new GaloisMathsEasy{};
-
-			if (cypheredSeq.size() > sequence.size())
-				EasyOperational->extendPoly(sequence, cypheredSeq.size());
-			for (unsigned i{}; i < cypheredSeq.size(); i++) {
-
-				int temp = cypheredSeq[i];
-				EasyOperational->numToField(temp, base);
-				sequence[i] = static_cast<unsigned>(temp);
-
-			}
-
-		}
-		void easyFieldBM();
+		BarlekampMasseyClass(std::string fileWay, unsigned base, unsigned degree = 1);
+		
 
 	private:
+		void easyFieldBM();
+		void extendedFieldBM();
+		void bmGettingReady(bool mode);
+		void extendedFieldHelper(std::vector<unsigned>&, std::vector<unsigned>&, unsigned&, unsigned&, unsigned&);
 		GaloisMathsEasy* EasyOperational{};
 		GaloisMathsExtended* HardOperational{};
+		std::thread operationalThread;
+		std::thread readingThread;
+		std::vector<unsigned> buffer;
 		unsigned base{};
 		unsigned degree{};
+		std::string fileWay;
 		std::vector<unsigned> sequence{};
 	
 };

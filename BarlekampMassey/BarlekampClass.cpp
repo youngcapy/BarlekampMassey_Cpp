@@ -1,23 +1,40 @@
 #include "BarlekampClass.h"
 
-/*
-BarlekampMasseyClass::BarlekampMasseyClass(std::vector<int> cypheredSeq, unsigned base, unsigned degree = 1)
+
+BarlekampMasseyClass::BarlekampMasseyClass(std::string fileWay, unsigned base, unsigned degree)
 {
 
 	this->base = base;
 	this->degree = degree;
+	this->fileWay = fileWay;
+
+	if(degree == 1){
+		EasyOperational = new GaloisMathsEasy{};
+		bmGettingReady(0);
+		easyFieldBM();
+	}
+
+	else{
+		HardOperational = new GaloisMathsExtended{this->base, this->degree};
+		bmGettingReady(1);
+		extendedFieldBM();
+	}
+
+	/*
 	if (cypheredSeq.size() > sequence.size())
-		EasyOperational.extendPoly(sequence, cypheredSeq.size());
+		EasyOperational->extendPoly(sequence, cypheredSeq.size());
 	for (unsigned i{}; i < cypheredSeq.size(); i++) {
 
 		int temp = cypheredSeq[i];
-		EasyOperational.numToField(temp, base);
+		EasyOperational->numToField(temp, base);
 		sequence[i] = static_cast<unsigned>(temp);
 
 	}
+	*/
+
 
 }
-*/ 
+
 
 void BarlekampMasseyClass::easyFieldBM() {
 
@@ -124,4 +141,127 @@ void BarlekampMasseyClass::easyFieldBM() {
 
 }
 
+void BarlekampMasseyClass::extendedFieldBM()
+{
 
+	std::vector<unsigned> currentNum{};
+	unsigned bmGrade{1}; // x
+	unsigned stepsNum{0}; // N
+	unsigned lfsrLength{0}; // L
+	unsigned currentCheck{}; // d
+	unsigned previousCheck{1}; // b
+
+	std::vector<unsigned> temp{}; // T(D)
+	std::vector<unsigned> currentLFSR{1}; // C(D)
+	std::vector<unsigned> helperB{1}; // B(D)
+	
+	for(unsigned j{}; j < buffer.size(); j++){
+
+		if(buffer[j] == UINT_MAX)
+			break;
+
+		currentNum = *(HardOperational->numPolyConv[buffer[j]]);
+		std::vector<unsigned> checkVec(HardOperational->elemQuantity);
+		//currentCheck = currentNum;
+		for(unsigned i{1}; i <= lfsrLength; i++){
+
+			unsigned mulTemp = HardOperational->fieldMul(currentLFSR[i], buffer[i]);			
+			std::vector<unsigned> mulVec = HardOperational->numToPolyConv(mulTemp);
+			HardOperational->fieldSum(checkVec, mulVec);
+
+		}
+
+		HardOperational->fieldSum(checkVec, currentNum);
+
+		currentCheck = HardOperational->polyToNumConv(&checkVec);
+
+		if(currentCheck == HardOperational->elemQuantity){
+
+
+			bmGrade++;
+		
+		}
+
+		else{
+
+			if(2 * lfsrLength > stepsNum){
+
+				extendedFieldHelper(currentLFSR, helperB, currentCheck, previousCheck, bmGrade);
+				bmGrade++;
+
+			}
+			
+			else{
+	
+				temp = currentLFSR;
+				extendedFieldHelper(currentLFSR, helperB, currentCheck, previousCheck, bmGrade);
+				lfsrLength = stepsNum + 1 - lfsrLength;
+				helperB = temp;
+				previousCheck = currentCheck;
+				bmGrade = 1;
+			}
+
+
+		}
+
+		stepsNum++;
+
+	}
+
+}
+
+void BarlekampMasseyClass::bmGettingReady(bool mode)
+{
+
+	if(mode)
+		operationalThread = std::thread([this](){
+			easyFieldBM();
+		});
+	else
+		operationalThread = std::thread([this](){
+			extendedFieldBM();
+		});
+
+	readingThread = std::thread([this](){
+		std::ifstream reader(fileWay);
+		char symbol;
+		unsigned currentNum{0};
+		bool readingNum;
+		while(reader.get(symbol)){
+
+			if(isdigit(symbol)){
+				
+				if(!readingNum)
+					readingNum = true;
+				currentNum = currentNum * 10 + (symbol - '0'); 
+
+			}
+			else{
+
+				if(readingNum)
+					buffer.push_back(currentNum);
+				readingNum = false;
+				currentNum = 0;
+
+			}
+
+		}
+		buffer.push_back(UINT_MAX);
+		
+	});
+
+}
+
+void BarlekampMasseyClass::extendedFieldHelper(std::vector<unsigned>& currentLFSR, std::vector<unsigned>& helperB, unsigned& currentCheck, unsigned& previousCheck, unsigned& gradeX)
+{
+
+	unsigned reversedPrev = HardOperational->reversedToField(previousCheck);
+	unsigned checksMul = HardOperational->fieldMul(currentCheck, reversedPrev);
+	checksMul = HardOperational->fieldMul(checksMul, HardOperational->constantNegIndex);
+	HardOperational->polyToDegree(helperB, gradeX);
+	for(unsigned i{0}; i < helperB.size(); i++)
+		helperB[i] = HardOperational->fieldMul(helperB[i], checksMul);
+	HardOperational->fieldSum(currentLFSR, helperB);
+	
+
+}
