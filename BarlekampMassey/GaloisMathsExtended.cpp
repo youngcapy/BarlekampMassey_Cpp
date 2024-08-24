@@ -35,8 +35,8 @@ bool GaloisMathsExtended::constantNegFinder()
     
 	for(unsigned i{}; i < field.size(); i++)
 		if(&field[i] == numPolyConv[base - 1])
-			return i;
-
+			constantNegIndex = i;
+	return true;
 }
 
 bool GaloisMathsExtended::convertionBuilder() // building field for convertion poly-decimal
@@ -85,12 +85,20 @@ bool GaloisMathsExtended::fieldBuilder() // Vectors are like x^n + x^(n-1) + ...
 }
 
 
-unsigned GaloisMathsExtended::polyToNumConv(std::vector<unsigned>* poly)
+unsigned GaloisMathsExtended::polyToNumConv(std::vector<unsigned>& poly)
 {
     for(unsigned i{}; i < numPolyConv.size(); i++)
-		if(*numPolyConv[i] == *poly)
+		if(*numPolyConv[i] == poly)
 			return i;
-	return elemQuantity; // returning zero elem
+	return elemQuantity - 1; // returning zero elem
+}
+
+unsigned GaloisMathsExtended::polyToIndexConv(std::vector<unsigned> & poly)
+{
+	for(unsigned i{}; i < field.size(); i++)
+		if(poly == field[i])
+			return i;
+    return elemQuantity - 1; // returning zero elem
 }
 
 std::vector<unsigned> GaloisMathsExtended::elemCreator(std::vector<unsigned>& currentVector)
@@ -126,22 +134,57 @@ std::vector<unsigned> GaloisMathsExtended::elemCreator(std::vector<unsigned>& cu
 
 bool GaloisMathsExtended::fieldSum(std::vector<unsigned>& firstOper, std::vector<unsigned>& secOper)
 {
-
+	if(firstOper.size() < secOper.size())
+		firstOper.resize(secOper.size());
 	unsigned lessSize{};
 	firstOper.size() > secOper.size() ? lessSize = secOper.size() : lessSize = firstOper.size();
 	
+	std::reverse(firstOper.begin(), firstOper.end());
+	std::reverse(secOper.begin(), secOper.end());
+
     for(unsigned i{0}; i < lessSize; i++){
 
 		firstOper[i] = (firstOper[i] + secOper[i]) % base;
 		
 	}
+
+	std::reverse(firstOper.begin(), firstOper.end());
+	std::reverse(secOper.begin(), secOper.end());
+
+	return true;
+}
+
+bool GaloisMathsExtended::polyIndexSum(std::vector<unsigned>& firstPoly, std::vector<unsigned>& secPoly)
+{
+
+	while(firstPoly.size() < secPoly.size())
+		firstPoly.insert(firstPoly.begin(), elemQuantity - 1);
+
+	while(secPoly.size() < firstPoly.size())
+		secPoly.insert(secPoly.begin(), elemQuantity - 1);
+
+    
+	for(unsigned i{}; i < firstPoly.size(); i++){
+
+ 		std::vector<unsigned> tempFirstPoly{field[firstPoly[i]]};
+		std::vector<unsigned> tempSecondPoly{field[secPoly[i]]};
+
+
+		fieldSum(tempFirstPoly, tempSecondPoly);
+		firstPoly[i] = polyToIndexConv(tempFirstPoly);
+
+	}
+
+
 	return true;
 }
 
 unsigned GaloisMathsExtended::fieldMul(unsigned& num1, unsigned& num2)
 {
+	if(num1 == elemQuantity - 1 || num2 == elemQuantity - 1)
+		return elemQuantity - 1;
     unsigned fieldIndex = (num1 + num2);
-	if(fieldIndex > elemQuantity - 1)
+	if(fieldIndex >= elemQuantity - 1)
 		fieldIndex -= elemQuantity - 1;
 	return fieldIndex;
 }
@@ -151,7 +194,7 @@ unsigned GaloisMathsExtended::fieldMul(unsigned& num1, unsigned& num2)
 std::vector<unsigned> GaloisMathsExtended::numToPolyConv(unsigned& index)
 {
 	if(index == 0)
-		return std::vector<unsigned>(elemQuantity);
+		return std::vector<unsigned>(grade);
     return std::vector<unsigned>{*numPolyConv[index]};
 }
 
@@ -171,6 +214,27 @@ void GaloisMathsExtended::polyToDegree(std::vector<unsigned>& poly, int degree) 
 
 }
 
+void GaloisMathsExtended::indexPolyToDeg(std::vector<unsigned> &poly, int degree)
+{
+
+	for(unsigned i{}; i < degree; i++){
+
+		poly.push_back(elemQuantity - 1);
+		if(poly[0] != elemQuantity - 1){
+
+			continue;
+
+		}
+		poly.erase(poly.begin());
+
+	}
+
+}
+
+void GaloisMathsExtended::indexPolySum(std::vector<unsigned> &poly1, std::vector<unsigned> &poly2)
+{
+}
+
 void GaloisMathsExtended::numToField(int& num) {
 
 	num >= 0? num %= base : num = (base - (abs(num) % base)) % base;
@@ -179,6 +243,8 @@ void GaloisMathsExtended::numToField(int& num) {
 
 unsigned GaloisMathsExtended::reversedToField(const unsigned& index) {
 
+	if(index == 0)
+		return 0;
 	return (elemQuantity - 1) - index;
 
 }

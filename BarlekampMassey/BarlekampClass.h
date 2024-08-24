@@ -4,7 +4,7 @@
 #include "GaloisMathsExtended.h"
 #include <fstream>
 #include <thread>
-
+#include <future>
 
 
 class BarlekampMasseyClass {
@@ -17,10 +17,10 @@ class BarlekampMasseyClass {
 		
 
 	private:
-		void easyFieldBM();
-		void extendedFieldBM();
+		std::vector<unsigned> easyFieldBM();
+		std::vector<unsigned>  extendedFieldBM();
 		void bmGettingReady(bool mode);
-		void extendedFieldHelper(std::vector<unsigned>&, std::vector<unsigned>&, unsigned&, unsigned&, unsigned&);
+		void extendedFieldHelper(std::vector<unsigned>&, std::vector<unsigned>, unsigned&, unsigned&, unsigned&);
 		GaloisMathsEasy* EasyOperational{};
 		GaloisMathsExtended* HardOperational{};
 		std::thread operationalThread;

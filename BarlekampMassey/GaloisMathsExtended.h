@@ -36,14 +36,18 @@ private:
 	bool convertionBuilder(); // builds numPolyConv
     bool fieldBuilder(); // builds field	
     bool fieldSum(std::vector<unsigned>&, std::vector<unsigned>&); // provides sum to field
-    unsigned fieldMul(unsigned&, unsigned&); // provides mul to field
+    bool polyIndexSum(std::vector<unsigned>&, std::vector<unsigned>&); // provides sum of indexes in poly
+	unsigned fieldMul(unsigned&, unsigned&); // provides mul to field
 
-	unsigned polyToNumConv(std::vector<unsigned>*); // converts polynomial to decimal(again?)
+	unsigned polyToNumConv(std::vector<unsigned>&); // converts polynomial to decimal
+	unsigned polyToIndexConv(std::vector<unsigned>&); // converts polynomial to field index
 	//unsigned polyToDecConv(const std::vector<unsigned>&); // converts polynomial to decimal
 
 	std::vector<unsigned> numToPolyConv(unsigned&); // converts decimal to polynomial
 	std::vector<unsigned> elemCreator(std::vector<unsigned>&); // creates polynomials for field
 	void polyToDegree(std::vector<unsigned>& poly, int degree); // provides exponentiation
+	void indexPolyToDeg(std::vector<unsigned>& poly, int degree); // 
+	void indexPolySum(std::vector<unsigned>& poly1, std::vector<unsigned>& poly2); // sumInField 
 	void numToField(int& num); // moves num to field
 	unsigned reversedToField(const unsigned&); // returns reversed num to field
 
