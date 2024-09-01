@@ -11,13 +11,13 @@ BarlekampMasseyClass::BarlekampMasseyClass(std::string fileWay, unsigned base, u
 	if(degree == 1){
 		EasyOperational = new GaloisMathsEasy{};
 		bmGettingReady(0);
-		easyFieldBM();
+		//easyFieldBM();
 	}
 
 	else{
 		HardOperational = new GaloisMathsExtended{this->base, this->degree};
 		bmGettingReady(1);
-		extendedFieldBM();
+		//extendedFieldBM();
 	}
 
 	/*
@@ -200,6 +200,8 @@ std::vector<unsigned> BarlekampMasseyClass::extendedFieldBM()
 			
 			else{
 	
+				if(lfsrLength == 516)
+					std::cout << "I`m here" << std::endl;
 				temp = currentLFSR;
 				extendedFieldHelper(currentLFSR, helperB, currentCheck, previousCheck, bmGrade);
 				lfsrLength = stepsNum + 1 - lfsrLength;

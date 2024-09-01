@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 {
 	
 
-	BarlekampMasseyClass execution{"seq.txt", 2, 3};
+	BarlekampMasseyClass execution{"seq.txt", 2, 14};
 	//struct rlimit rl;
 	//getrlimit(RLIMIT_STACK, &rl);
     //std::cout << rl.rlim_cur << std::endl;
